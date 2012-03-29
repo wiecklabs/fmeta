@@ -55,5 +55,15 @@ class ImageTest < Test::Unit::TestCase
 
     FileUtils.rm(tempfile.path)
   end
+  
+  def test_file_permissions_persist
+    original_permissions = File.stat(SAMPLE_PATH).mode
+    
+    writer = Fmeta::Image::Exiftool::Writer.new(SAMPLE_PATH)
+    dirty_tags = []
+    writer.write(dirty_tags)
+    
+    assert_equal(original_permissions, File.stat(SAMPLE_PATH).mode)
+  end
 
 end

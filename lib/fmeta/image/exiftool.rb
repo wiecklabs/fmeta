@@ -133,6 +133,7 @@ class Fmeta::Image
       end
 
       def write(tags)
+        file_permissions = File.stat(@path).mode
         tempfile = Tempfile.new('fmeta')
         FileUtils.cp(@path, tempfile.path)
 
@@ -152,6 +153,8 @@ class Fmeta::Image
 
         if File.file?(tempfile.path)
           FileUtils.mv(tempfile.path, @path)
+          #Set the file permissions back to what they were originally
+          FileUtils.chmod(file_permissions, @path)
         else
           raise Exiftool::Writer::WriteError.new(tempfile.path)
         end
