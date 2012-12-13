@@ -2,7 +2,7 @@
 lib = File.expand_path('../lib/', __FILE__)
 $:.unshift lib unless $:.include?(lib)
 
-require "lib/fmeta/version"
+require "./lib/fmeta/version"
 
 NAME = "fmeta"
 SUMMARY = "Fmeta File Metadata"
