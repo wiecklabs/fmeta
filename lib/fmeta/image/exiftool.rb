@@ -107,7 +107,12 @@ class Fmeta::Image
           components = match.to_a[2..7].map { |c| c.to_i }
           components << match[-2]
 
-          DateTime.civil(*components)
+          # Intercept bad dates
+          if components[0] == 0000
+            tag_value_string
+          else
+            DateTime.civil(*components)
+          end
         else
           tag_value_string
         end

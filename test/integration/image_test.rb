@@ -55,15 +55,33 @@ class ImageTest < Test::Unit::TestCase
 
     FileUtils.rm(tempfile.path)
   end
-  
+
   def test_file_permissions_persist
     original_permissions = File.stat(SAMPLE_PATH).mode
-    
+
     writer = Fmeta::Image::Exiftool::Writer.new(SAMPLE_PATH)
     dirty_tags = []
     writer.write(dirty_tags)
-    
+
     assert_equal(original_permissions, File.stat(SAMPLE_PATH).mode)
+  end
+
+  def test_writing_data_with_bad_date
+    tempfile = Tempfile.new('fmeta')
+    FileUtils.cp(SAMPLE_PATH, tempfile.path)
+    bad_date = "0000:00:00 00:00:00+00:00"
+
+    # Write new metadata
+    meta = Fmeta::Image.new(tempfile.path)
+    meta['MetadataDate'] = bad_date
+    meta.save
+
+    # Ensure that the changes were persisted
+    meta = Fmeta::Image.new(tempfile.path)
+
+    assert_equal("0000:00:00 00:00:00+00:00", meta['MetadataDate'].to_s)
+
+    FileUtils.rm(tempfile.path)
   end
 
 end

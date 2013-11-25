@@ -1,6 +1,6 @@
 require "rubygems"
 require "rake"
-require "rake/rdoctask"
+require "rdoc/task"
 require "rake/testtask"
 
 # Gem
@@ -12,9 +12,9 @@ def gemspec
 end
 
 begin
-  require 'rake/gempackagetask'
+  require 'rubygems/package_task'
 
-  Rake::GemPackageTask.new(gemspec) do |pkg|
+  Gem::PackageTask.new(gemspec) do |pkg|
     pkg.gem_spec = gemspec
   end
 rescue LoadError
